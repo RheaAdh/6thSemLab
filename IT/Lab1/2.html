@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+             #display{
+                width: 400px;
+                font-size: 55px;
+                color: black;
+                text-align: right;
+                border: 2px solid black;
+            }
+             input{
+                margin-top: 5px;
+                font-size: 25px;
+                width: 95px;
+                height: 95px;
+            }
+        </style>
+        <script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type = "text/javascript" language = "javascript">
+            $(document).ready(function(){
+                $(".x").click(function(){
+                    $("#display").val($("#display").val() + $(this).val());
+                });
+                $(".clear").click(function(){
+                    $("#display").val(' ');
+                });
+                $(".result").click(function(){
+                    $("#display").val(eval($("#display").val()));
+                });
+            });
+        </script>
+    </head>
+        <body>            
+            <div class="main">
+                <input id="display" type="text" placeholder=""><br>
+
+                <input class="x" type="button" value="7">
+                <input class="x" type="button" value="8">
+                <input class="x" type="button" value="9">
+                <input class="x" type="button" value="*">
+                <br>
+                <input class="x" type="button" value="4">
+                <input class="x" type="button" value="5">
+                <input class="x" type="button" value="6">
+                <input class="x" type="button" value="/">
+                <br>
+                <input class="x" type="button" value="1">
+                <input class="x" type="button" value="2">
+                <input class="x" type="button" value="3">
+                <input class="x" type="button" value="-">
+                <br>
+                <input class="clear" type="button" value="C">
+                <input class="x" type="button" value="0">
+                <input class="x" type="button" value="+">
+                <input class="result" type="button" value="=">
+            </div>
+        </body>   
+</html>

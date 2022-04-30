@@ -1,0 +1,97 @@
+<html>
+
+<head>
+   
+    <title>Bill</title>
+    <script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#bill").click(function () {
+                let brand_name = $("#brand-choice").val();
+                let quan = $("#quantity").val();
+                console.log({ quan });
+                let amt = 0;
+                let price = 0;
+                let laptop = $("#laptop").prop("checked");
+                let mobile = $("#mobile").prop("checked");
+                if (brand_name == "HP") {
+                    price = laptop * 10000 + mobile * 5000;
+                } else if (brand_name == "Nokia") {
+                    price = laptop * 11000 + mobile * 6000;
+                } else if (brand_name == "Samsung") {
+                    price = laptop * 12000 + mobile * 7000;
+                } else if (brand_name == "Motorola") {
+                    price = laptop * 13000 + mobile * 8000;
+                } else {
+                    price = laptop * 14000 + mobile * 9000;
+                }
+                let n = parseInt(quan);
+                amt = n * price;
+                alert(amt);
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <p>
+    <table>
+        <tr>
+            <td>Brand</td>
+            <td>Laptop</td>
+            <td>Mobile</td>
+        </tr>
+        <tr>
+            <td>HP</td>
+            <td>10000</td>
+            <td>5000</td>
+        </tr>
+        <tr>
+            <td>Nokia</td>
+            <td>11000</td>
+            <td>6000</td>
+        </tr>
+        <tr>
+            <td>Samsung</td>
+            <td>12000</td>
+            <td>7000</td>
+        </tr>
+        <tr>
+            <td>Motorola</td>
+            <td>13000</td>
+            <td>8000</td>
+        </tr>
+        <tr>
+            <td>Apple</td>
+            <td>14000</td>
+            <td>9000</td>
+        </tr>
+    </table>
+    </p>
+    <label for="brand-choice">Choose a Brand:</label>
+    <input list="brands" id="brand-choice" name="brand-choice" />
+    <datalist id="brands">
+        <option value="HP"></option>
+        <option value="Nokia"></option>
+        <option value="Samsung"></option>
+        <option value="Motorola"></option>
+        <option value="Apple"></option>
+    </datalist>
+    <p>Choose:</p>
+    <div>
+        <input type="checkbox" id="laptop" name="laptop" checked>
+        <label for="laptop">Laptop</label>
+    </div>
+    <div>
+        <input type="checkbox" id="mobile" name="mobile">
+        <label for="mobile">Mobile</label>
+    </div>
+    <div>
+        <label for="quantity">Quantity</label>
+        <input type="text" id="quantity" name="quantity" required>
+    </div>
+    <button id="bill">Bill Amount</button>
+    <p id="write-bill"></p>
+</body>
+
+</html>

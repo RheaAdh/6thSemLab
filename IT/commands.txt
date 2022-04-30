@@ -1,0 +1,6 @@
+python3.6 -m venv my_env 
+source my_env/bin/activate
+python manage.py makemigrations
+python manage.py migrate
+python3 manage.py runserver 8001
+python manage.py migrate --run-syncdb
