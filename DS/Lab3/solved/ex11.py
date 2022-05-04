@@ -1,0 +1,26 @@
+import numpy as np
+a=np.arange(10)**3
+print("a=")
+print(a)
+print("--")
+print(a[2:5])
+print(a[0:6:2])
+b=np.arange(20).reshape(5,4)
+print("b=")
+print(b)
+print("--")
+print(b[2,3])
+print(b[0:5,1])
+print(b[-1,:])
+print(b[:,-1])
+print("-row-")
+for row in b:
+    print(row,sep='')
+print("-flat-")
+for ele in b.flat:
+    print(ele,end=' ')
+print("-ravel-")
+print(b.ravel())
+B1=b.reshape(4,5)
+print("B1=")
+print(B1)

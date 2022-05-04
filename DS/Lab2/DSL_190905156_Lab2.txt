@@ -1,0 +1,291 @@
+﻿Rhea Adhikari
+190905156
+Introduction to PANDAS
+
+import pandas as pd
+import numpy as np
+s=pd.Series([3,9,-2,10,5])
+print(s.sum())
+print(s.min())
+print(s.max())
+
+student@dslab-12:~/Documents/190905156_DS/Lab2$ python eg1.py
+25
+-2
+10
+
+Creating a Data Frame
+
+import pandas as pd
+data=[['Rhea',20],['Dinesh',21],['Nithya',12]]
+df=pd.DataFrame(data,columns=['Name','Age'])
+print(df)
+
+student@dslab-12:~/Documents/190905156_DS/Lab2$ python eg2.py
+     Name  Age
+0    Rhea   20
+1  Dinesh   21
+2  Nithya   12
+
+Indexed Data Frame
+
+import pandas as pd
+data = {'Name':['Kavitha', 'Sudha', 'Raju','Vignesh'],'Age':[28,34,29,42]}
+df = pd.DataFrame(data, index=['rank1','rank2','rank3','rank4'])
+print(df)
+
+student@dslab-12:~/Documents/190905156_DS/Lab2$ python eg3.py
+       Age     Name
+rank1   28  Kavitha
+rank2   34    Sudha
+rank3   29     Raju
+rank4   42  Vignesh
+
+
+Creating a DataFrame using Dictionary
+
+
+import pandas as pd
+import numpy as np
+df1=pd.DataFrame({'A':pd.Timestamp('20130102'),'B':np.array([3]*4,dtype='int32'),
+'C':pd.Categorical(['Male','Female','Male','Female'])})
+print(df1)
+print(df1.shape)
+print(df1.dtypes)
+print(df1.head())
+print(df1.tail())
+print(df1.info())
+print(df1.T)
+
+student@dslab-12:~/Documents/190905156_DS/Lab2$ python eg4.py
+           A  B       C
+0 2013-01-02  3    Male
+1 2013-01-02  3  Female
+2 2013-01-02  3    Male
+3 2013-01-02  3  Female
+(4, 3)
+A    datetime64[ns]
+B             int32
+C          category
+dtype: object
+           A  B       C
+0 2013-01-02  3    Male
+1 2013-01-02  3  Female
+2 2013-01-02  3    Male
+3 2013-01-02  3  Female
+           A  B       C
+0 2013-01-02  3    Male
+1 2013-01-02  3  Female
+2 2013-01-02  3    Male
+3 2013-01-02  3  Female
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 4 entries, 0 to 3
+Data columns (total 3 columns):
+A    4 non-null datetime64[ns]
+B    4 non-null int32
+C    4 non-null category
+dtypes: category(1), datetime64[ns](1), int32(1)
+memory usage: 220.0 bytes
+None
+                     0                    1                    2                    3
+A  2013-01-02 00:00:00  2013-01-02 00:00:00  2013-01-02 00:00:00  2013-01-02 00:00:00
+B                    3                    3                    3                    3
+C                 Male               Female                 Male               Female
+
+
+import pandas as pd
+import numpy as np
+dates=pd.date_range('20130101', periods=100)
+df = pd.DataFrame(np.random.randn(100,4), index=dates, columns=list('ABCD'))
+# To view last 5 records
+print(df.tail())
+# To view the index
+print(df.index)
+# To view the column names
+print(df.columns)
+# Sorting by Axis
+print(df.sort_index(axis=1, ascending=False).head())
+# Sorting by Values
+print(df.sort_values(by='B').head(3))
+# Slicing the rows
+print(df[0:3])
+# Slicing with index name
+print(df['20130105':'20130110'])
+# Slicing with row and column index (like 2D Matrix)
+print(df.iloc[0])
+# will fetch 1 st row, first 2 columns
+print(df.iloc[0,:2])
+# will fetch 1 st row, 1 st column element
+print(df.iloc[0,0])
+# Selecting a single column
+print(df['A'].head())
+# Selecting more than one column
+print(df[['A','B']][:5])
+# Selecting more than one column, with selected number of records
+print(df.loc['20130101':'20130105'][:2])
+
+# Boolean Indexing
+print(df[df.A>1])
+# Setting by assigning with a numpy array
+df.loc[:,'D']=np.array([5]*len(df))
+
+# Deleting a row or column
+df.drop('C',axis=1,inplace=True)
+df.drop('20130101',axis=0,inplace=True)
+
+student@dslab-12:~/Documents/190905156_DS/Lab2$ python eg5.py
+                   A         B         C         D
+2013-04-06 -1.172572  0.329879  1.381335 -0.123022
+2013-04-07 -0.600773 -0.824844  0.326027 -0.146984
+2013-04-08  0.520495 -1.483116  0.153622 -0.052604
+2013-04-09 -1.259275 -1.404251  1.011675 -0.476070
+2013-04-10 -0.003742 -1.299192  0.407745  0.577616
+DatetimeIndex(['2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04',
+               '2013-01-05', '2013-01-06', '2013-01-07', '2013-01-08',
+               '2013-01-09', '2013-01-10', '2013-01-11', '2013-01-12',
+               '2013-01-13', '2013-01-14', '2013-01-15', '2013-01-16',
+               '2013-01-17', '2013-01-18', '2013-01-19', '2013-01-20',
+               '2013-01-21', '2013-01-22', '2013-01-23', '2013-01-24',
+               '2013-01-25', '2013-01-26', '2013-01-27', '2013-01-28',
+               '2013-01-29', '2013-01-30', '2013-01-31', '2013-02-01',
+               '2013-02-02', '2013-02-03', '2013-02-04', '2013-02-05',
+               '2013-02-06', '2013-02-07', '2013-02-08', '2013-02-09',
+               '2013-02-10', '2013-02-11', '2013-02-12', '2013-02-13',
+               '2013-02-14', '2013-02-15', '2013-02-16', '2013-02-17',
+               '2013-02-18', '2013-02-19', '2013-02-20', '2013-02-21',
+               '2013-02-22', '2013-02-23', '2013-02-24', '2013-02-25',
+               '2013-02-26', '2013-02-27', '2013-02-28', '2013-03-01',
+               '2013-03-02', '2013-03-03', '2013-03-04', '2013-03-05',
+               '2013-03-06', '2013-03-07', '2013-03-08', '2013-03-09',
+               '2013-03-10', '2013-03-11', '2013-03-12', '2013-03-13',
+               '2013-03-14', '2013-03-15', '2013-03-16', '2013-03-17',
+               '2013-03-18', '2013-03-19', '2013-03-20', '2013-03-21',
+               '2013-03-22', '2013-03-23', '2013-03-24', '2013-03-25',
+               '2013-03-26', '2013-03-27', '2013-03-28', '2013-03-29',
+               '2013-03-30', '2013-03-31', '2013-04-01', '2013-04-02',
+               '2013-04-03', '2013-04-04', '2013-04-05', '2013-04-06',
+               '2013-04-07', '2013-04-08', '2013-04-09', '2013-04-10'],
+              dtype='datetime64[ns]', freq='D')
+Index([u'A', u'B', u'C', u'D'], dtype='object')
+                   D         C         B         A
+2013-01-01  1.161094  0.896271 -0.803311 -1.255129
+2013-01-02 -1.750906  1.668967  1.962926  0.166198
+2013-01-03 -1.352772  0.425911  0.062403 -2.003067
+2013-01-04  1.029104  0.810261 -1.677030 -0.197060
+2013-01-05 -1.446934  1.506803  1.743491 -0.050913
+                   A         B         C         D
+2013-01-15  0.455687 -2.038887 -0.328910  0.448149
+2013-03-30 -0.442240 -1.704106  0.075293  0.331543
+2013-01-04 -0.197060 -1.677030  0.810261  1.029104
+                   A         B         C         D
+2013-01-01 -1.255129 -0.803311  0.896271  1.161094
+2013-01-02  0.166198  1.962926  1.668967 -1.750906
+2013-01-03 -2.003067  0.062403  0.425911 -1.352772
+                   A         B         C         D
+2013-01-05 -0.050913  1.743491  1.506803 -1.446934
+2013-01-06  0.519789 -0.455602  1.093401 -0.432122
+2013-01-07  0.096031  1.618521  1.385638 -0.905861
+2013-01-08 -0.619992 -0.457135 -1.551672 -2.388939
+2013-01-09  0.703748  0.693629 -0.129021 -0.330198
+2013-01-10 -0.591630 -0.242613 -1.172505 -0.843304
+A   -1.255129
+B   -0.803311
+C    0.896271
+D    1.161094
+Name: 2013-01-01 00:00:00, dtype: float64
+A   -1.255129
+B   -0.803311
+Name: 2013-01-01 00:00:00, dtype: float64
+-1.2551291052452302
+2013-01-01   -1.255129
+2013-01-02    0.166198
+2013-01-03   -2.003067
+2013-01-04   -0.197060
+2013-01-05   -0.050913
+Freq: D, Name: A, dtype: float64
+                   A         B
+2013-01-01 -1.255129 -0.803311
+2013-01-02  0.166198  1.962926
+2013-01-03 -2.003067  0.062403
+2013-01-04 -0.197060 -1.677030
+2013-01-05 -0.050913  1.743491
+                   A         B         C         D
+2013-01-01 -1.255129 -0.803311  0.896271  1.161094
+2013-01-02  0.166198  1.962926  1.668967 -1.750906
+
+Concatenation of two Data Frames
+
+import pandas as pd
+import numpy as np
+data1=[[1,2],[3,4],[5,6]]
+data2=[[1,2],[3,4],[5,6]]
+df1=pd.DataFrame(data1)
+df2=pd.DataFrame(data2)
+df_new1=pd.concat([df1,df2],axis=1)
+print(df_new1.shape)
+df_new2=pd.concat([df1,df2],axis=0)
+print(df_new2.shape)
+
+student@dslab-12:~/Documents/190905156_DS/Lab2$ python eg6.py
+(3, 4)
+(6, 2)
+
+Sorting and Ordering a DataFrame
+
+import pandas as pd
+data = {'Name':['Kavitha', 'Sudha', 'Raju','Vignesh'],'Age':[28,34,29,42]}
+df = pd.DataFrame(data, index=['rank1','rank2','rank3','rank4'])
+df=df.sort_values(by='Age')
+print(df)
+
+student@dslab-12:~/Documents/190905156_DS/Lab2$ python eg7.py
+       Age     Name
+rank1   28  Kavitha
+rank3   29     Raju
+rank2   34    Sudha
+rank4   42  Vigneshs
+
+I/O Operations with external files
+Reading a CSV file & XLS file format
+
+import pandas as pd
+import matplotlib.pyplot as plt 
+df = pd.read_csv('diabetes.csv',header=None)
+print(df.head())
+df.columns=['preg','glu','bp','sft','ins','bmi','dpf','age','class']
+print(plt.scatter(df['bmi'],df['glu']))
+plt.xlabel('bmi')
+plt.ylabel('Glucose')
+df['age'].hist()
+plt.show()
+
+
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+W = pd.read_csv('wine_for_Week2.xls', header=None)
+print(W.head())
+D= np.loadtxt('xyz.txt',delimiter=",")
+print(D[:5,:])
+G=pd.read_excel('German Credit_for_Week2.xlsx',sheet_name='Sheet1',engine='openpyxl')
+print(G.head())
+H = pd.read_table('HR_for_Week2.txt')
+H.head()
+f=H['Department'].value_counts()
+print(f)
+f.plot(kind='bar')
+plt.show()
+f.plot(kind='pie')
+plt.show()
+fa=pd.crosstab(H['Gender'],H['Attrition'])
+fa.plot(kind='bar')
+plt.show()
+
+
+
+
+
+
+

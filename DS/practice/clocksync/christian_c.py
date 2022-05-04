@@ -1,0 +1,37 @@
+
+import socket
+import datetime
+from dateutil import parser
+from timeit import default_timer as timer
+
+s=socket.socket()
+port=8011
+host='localhost'
+
+s.connect((host,port))
+
+request_time=timer()
+
+server_time=parser.parse(s.recv(1024).decode())
+
+response_time=timer()
+
+actual_time=datetime.datetime.now()
+
+print("Timer returned by server:"+str(server_time))
+
+process_delay_latency=response_time-request_time
+
+print("Process Delay Latency: "+str(process_delay_latency+"seconds"))
+
+
+print("Actual clock time at client side:"+str(actual_time))
+
+client_time=server_time+datetime.timedelta(seconds=(process_delay_latency)/2)
+
+
+error=actual_time-client_time
+
+print("synchronization err: "+str(error.total_seconds()+"seconds"))
+
+s.close()

@@ -1,0 +1,9 @@
+SNo,ObservationDate,Province/State,Country/Region,LastUpdate,Confirmed,Deaths,Recovered
+1,1/22/2020,Anhui,Mainland China,1/22/2020 17:00,143,0,350
+2,1/22/2020,Beijing,Mainland China,1/22/2020 17:00,14,0,30
+1,1/22/2020,Anhui,Mainland China,1/22/2020 17:00,124,120,50
+2,1/22/2020,Beijing,Mainland China,1/22/2020 17:00,14,0,20
+1,1/22/2020,Anhui,Mainland China,1/22/2020 17:00,1,0,0
+2,1/22/2020,Beijing,Mainland China,1/22/2020 17:00,14,0,10
+1,1/22/2020,Anhui,Mainland China,1/22/2020 17:00,1,3,0
+2,1/22/2020,Beijing,Mainland China,1/22/2020 17:00,14,120,10

@@ -1,0 +1,15 @@
+import numpy as np
+A1=np.array([(3,4,5),(12,6,1)])
+A2=np.array([(1,2,6),(-4,3,8)])
+print(A1)
+print(A2)
+D1=np.vstack((A1,A2))
+D2=np.hstack((A1,A2))
+print(D1)
+print(D2)
+
+a=np.array([4.0,2.0])
+b=np.array([3.0,8.0])
+np.column_stack((a,b))
+D3=np.hstack((a,b))
+print(D3)
