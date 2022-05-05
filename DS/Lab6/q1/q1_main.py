@@ -19,9 +19,9 @@ def startRecieveingClockTime(connector, address):
 		print("Client Data updated with: "+ str(address), end = "\n\n")
 		time.sleep(5)
 
-def startConnecting(master_server):
+def startConnecting(s):
 	while True:
-		master_slave_connector, addr = master_server.accept()
+		master_slave_connector, addr = s.accept()
 		slave_address = str(addr[0]) + ":" + str(addr[1])
 		print(slave_address + " got connected successfully")
 		current_thread = threading.Thread(
@@ -54,16 +54,16 @@ def synchronizeAllClocks():
 		time.sleep(5)
 
 def initiateClockServer(port = 8080):
-	master_server = socket.socket()
-	master_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+	s = socket.socket()
+	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	print("The Manipal Foodie\n")
-	master_server.bind(('', port))
-	master_server.listen(10)
+	s.bind(('', port))
+	s.listen(10)
 	print("Clock server print\n")
 	print("Connecitng to production lines...\n")
 	master_thread = threading.Thread(
 		target = startConnecting,
-		args = (master_server, ))
+		args = (s, ))
 	master_thread.start()
 	print("Starting synchronization parallely...\n")
 	sync_thread = threading.Thread(
