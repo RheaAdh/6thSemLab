@@ -1,0 +1,86 @@
+%%cu
+#include<stdio.h>
+#include<stdlib.h>
+__global__ void kernelFunc(int*d_A,int m,int n,char*d_B){
+    int idx=threadIdx.x;
+    printf("id %d",idx);
+    for(int j=0;j<n;j++)
+    {
+    int val=d_A[idx*n+j];
+    
+    int f=0;
+    for(int i=2;i*i<=val;i++){
+        if(val%i==0){
+            f=1; // f=1 means not prime
+            break;
+        }
+    }
+    if(f==1){
+        if(val==0){
+            
+            d_B[idx*n+j]='Z';
+            
+        }
+        else if(val==1){
+            d_B[idx*n+j]='O';
+        }
+        else if(val<0){
+            d_B[idx*n+j]='N';
+        }
+        else{
+            d_B[idx*n+j]='C';
+        }
+    }
+    else{
+        d_B[idx*n+j]='P';
+    }
+    }
+       
+  
+    
+}
+int main(){
+    int m=3,n=2;
+    int *h_A=(int*)malloc(n*m*sizeof(int));
+    char*h_B=(char*)malloc(n*m*sizeof(char));
+    h_A[0]=8;
+    h_A[1]=2;
+    h_A[2]=0;
+    h_A[3]=-2;
+    h_A[4]=13;
+    h_A[5]=1;    
+    printf("IntMatrix before\n");
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            printf("%d ",h_A[i*n+j]);
+        }
+        printf("\n");
+    }
+
+    int*d_A;
+    char *d_B;
+
+    //no.of threads=m
+    cudaMalloc((void**)&d_A,n*m*sizeof(int));
+    cudaMalloc((void**)&d_B,n*m*sizeof(char));
+    
+    cudaMemcpy(d_A,h_A,n*m*sizeof(int),cudaMemcpyHostToDevice);
+
+    dim3 dimBlock(m,1,1);
+    dim3 dimGrid(1,1,1);
+
+    kernelFunc<<<dimGrid,dimBlock>>>(d_A,m,n,d_B);
+
+    cudaMemcpy(h_B,d_B,n*m*sizeof(char),cudaMemcpyDeviceToHost);
+    
+    printf("CharMatrix after\n");
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            printf("%c ",h_B[i*n+j]);
+        }
+        printf("\n");
+    }
+    
+    cudaFree(d_A);
+    cudaFree(d_B);
+}

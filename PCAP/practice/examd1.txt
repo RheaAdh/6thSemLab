@@ -1,0 +1,139 @@
+%%cu
+#include<stdio.h>
+#include<stdlib.h>
+__global__ void kernelFunc1(int *d_A){
+    int row=blockIdx.y;
+    int col=blockIdx.x;
+    int n=gridDim.y;
+    int m=gridDim.x;
+    if(row==0||col==0||row==n-1||col==m-1){
+        int val=d_A[row*m+col];
+        int x=val;
+        int i=0;
+        int ans=0;
+        while(x!=0){
+            int rem=x%8;
+            ans+=pow(10,i)*rem;
+            x=x/8;
+            i++;
+        }
+        d_A[row*m+col]=ans;
+    }
+}
+__global__ void kernelFunc2(int *d_A,int *d_B,int*dx,int*dy){
+    int row=blockIdx.y;
+    int col=blockIdx.x;
+    int n=gridDim.y;
+    int m=gridDim.x;
+    if(row==0||col==0||row==n-1||col==m-1){
+        d_B[row*m+col]=d_A[row*m+col];
+    }
+    else{
+        //non border ele will have 8 surrounding ele
+         
+         int cnt=0;
+         int fib[1000]={0};
+         fib[1]=1;
+         for(int z=2;z<1000;z++){
+          fib[z]=fib[z-2]+fib[z-1];    
+         }
+ 
+
+for(int k=0;k<8;k++){
+         
+             int newcol=col+dx[k];
+             int newrow=row+dy[k];
+             int ele=d_A[newrow*m+newcol];
+             if(row==1&&col==2)
+              printf("newrow=%d,newcol%d,idx=%d,ele=%d,row=%d,col=%d,dx=%d,dy=%d\n",newrow,newcol,ele,row,col,dx[k],dy[k]);
+
+             for(int q=0;q<1000;q++){
+                 if(ele==fib[q]){
+                     cnt++;
+                     if(row==1&&col==2)
+                      printf("%d-yo\n",ele);
+                 }
+             }
+    }
+          
+         d_B[row*m+col]=cnt;
+    }
+}
+int main(){
+      int *dx= (int *)malloc(8* sizeof(int));
+      int *dy= (int *)malloc(8* sizeof(int));
+     dx[0]=1;dx[1]=1;dx[2]=1;dx[3]=1;dx[4]=0;dx[5]=-1;dx[6]=-1;dx[7]=-1;
+      dy[0]=-1;dy[1]=-1;dy[2]=0;dy[3]=1;dy[4]=1;dy[5]=1;dy[6]=0;dy[7]=-1;
+
+    
+   //dx={0,1,1,1,0,-1,-1,-1};
+   // dy={-1,-1,0,1,1,1,0,-1};
+    int *h_A,*h_B,*h_C;
+    int n=3;
+    int m=5;
+
+    h_A=(int*)malloc(n*m*sizeof(int));
+    h_B=(int*)malloc(n*m*sizeof(int));
+    h_C=(int*)malloc(n*m*sizeof(int));
+    
+    //assigning
+    for(int i=0;i<n*m;i++){
+        h_A[i]=i+4;
+    }
+
+    printf("matrix:\n");
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            printf("%d\t",h_A[i*m+j]);
+        }
+        printf("\n");
+    }
+    
+    int*d_A;
+    cudaMalloc((void**)&d_A,n*m*sizeof(int));
+    cudaMemcpy(d_A,h_A,n*m*sizeof(int),cudaMemcpyHostToDevice);
+    
+    dim3 dimGrid(m,n,1);
+    dim3 dimBlock(1,1,1);
+
+    kernelFunc1<<<dimGrid,dimBlock>>>(d_A);
+
+    //copied octal to h_B
+    cudaMemcpy(h_B,d_A,n*m*sizeof(int),cudaMemcpyDeviceToHost);
+
+    //h_B has after octal
+    printf("matrix after octal operation:\n");
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            printf("%d\t",h_B[i*m+j]);
+        }
+        printf("\n");
+    }
+   
+
+    int*d_B;
+    cudaMalloc((void**)&d_B,n*m*sizeof(int));
+   
+int*d_dx,*d_dy;
+cudaMalloc((void**)&d_dx,8*sizeof(int));
+cudaMalloc((void**)&d_dy,8*sizeof(int));
+cudaMemcpy(d_dx,dx,8*sizeof(int),cudaMemcpyHostToDevice);
+cudaMemcpy(d_dy,dy,8*sizeof(int),cudaMemcpyHostToDevice);
+   //d_A has the new matrix after octal will keep d_A fixed and change in d_B 
+    kernelFunc2<<<dimGrid,dimBlock>>>(d_A,d_B,d_dx,d_dy);
+
+
+    //h_C has after fib
+    cudaMemcpy(h_C,d_B,n*m*sizeof(int),cudaMemcpyDeviceToHost);
+
+
+    printf("matrix after fibonacci operation:\n");
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            printf("%d\t",h_C[i*m+j]);
+        }
+        printf("\n");
+    }
+
+    cudaFree(d_A);
+}
