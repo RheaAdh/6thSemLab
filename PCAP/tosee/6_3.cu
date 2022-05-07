@@ -38,9 +38,6 @@ __global__ void kernel_1d_conv_shared_mem(int *N, int *P, int mask_width, int wi
 }
 int main()
 {
-    cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
     int width = MAX_WIDTH;
     int mask_width = MAX_MASK_WIDTH;
     int *h_N = (int *)calloc(width, sizeof(int));
@@ -63,22 +60,18 @@ int main()
     cudaMemcpy(d_N, h_N, size, cudaMemcpyHostToDevice);
     cudaMemcpy(d_P, h_P, size, cudaMemcpyHostToDevice);
     cudaMemcpyToSymbol(M, h_M, mask_width * sizeof(int));
-    cudaEventRecord(start);
+
     kernel_1d_conv_const_mem<<<1, MAX_WIDTH>>>(d_N, d_P, mask_width, width);
-    cudaEventRecord(stop);
+  
     cudaMemcpy(h_P, d_P, size, cudaMemcpyDeviceToHost);
-    cudaEventSynchronize(stop);
-    float milliseconds = 0;
-    cudaEventElapsedTime(&milliseconds, start, stop);
-    printf("P: ");
+    
     for (int i = 0; i < width; i++)
     {
         printf("%d, ", h_P[i]);
     }
     printf("\n");
-    printf("Time to taken for 1D convolution kernel with constant memory for M is %f ms\n",
-           milliseconds);
-    printf("= = = = = = = = = = \n");
+
+   
     /* == Shared Memory == */
     h_P = (int *)calloc(width, sizeof(int));
     cudaMemcpy(d_P, h_P, size, cudaMemcpyHostToDevice);

@@ -1,37 +1,33 @@
-#include<cuda.h>
+%%cu
 #include<stdio.h>
 #include<stdlib.h>
 __global__ void kernelFunc(int *d_A,int*d_result,int n){
-    //one thread in the block calculates diagnol sum
-    int idx=2*blockIdx.y+blockIdx.x;
-    int row=blockIdx.y;
-    int col=blockIdx.x;
+    int blockId=blockIdx.y*gridDim.x+blockIdx.x;
+    int threadId=blockId*blockDim.x+threadIdx.x;
+    int col=threadId%(n/2);
+    int row=threadId/n;
     int sum=0;
-  
-    for(int i=0;i<n/4;i++){
-        for(int j=0;j<n/4;j++){
+    for(int i=0;i<n/2;i++){
+        for(int j=0;j<n/2;j++){
             if(row==col){
-                sum+=d_A[i*n+j];
+                sum+=d_A[row*(n/2)+col];
             }
         }
     }
-    d_result[idx]=sum;
-    
+    //d_result[blockIdx]=sum;
+    printf("diag sum for %d is %d\n",blockId,sum);
 }
 int main(){
-    int h_mat[100][100];
-    int n;
-    printf("Enter N of matrix N*N\n");
-    scanf("%d",&n);
-    
+    int n=4;
     int*h_A;
     h_A=(int*)malloc(n*n*sizeof(int));
+    
 
-    printf("Enter matrix ele \n");
+    //printf("Enter matrix ele \n");
     for(int i=0;i<n;i++){
         for(int j=0;j<n;j++){
-            scanf("%d",&h_mat[i][j]);
-            h_A[i*n+j]=h_mat[i][j];
+            //scanf("%d",&h_mat[i][j]);
+            h_A[i*n+j]=(i*n+j)+1;
         }
     }
     printf(" matrix ele \n");
@@ -51,17 +47,18 @@ int main(){
 
     cudaMemcpy(d_result,result,4*sizeof(int),cudaMemcpyHostToDevice);
 
-    dim3 dimGrid(n/2,n/2,1);
+    dim3 dimGrid(2,2,1);
     dim3 dimBlock(1,1,1);
 
     kernelFunc<<<dimGrid,dimBlock>>>(d_A,d_result,n);
 
-    cudaMemcpy(result,d_result,4*sizeof(int),cudaMemcpyDeviceToHost);
+    // cudaMemcpy(result,d_result,4*sizeof(int),cudaMemcpyDeviceToHost);
 
-    for(int i=0;i<4;i++){
-        printf("%d ",result[i]);
-    }
+    // for(int i=0;i<4;i++){
+    //     printf("%d ",result[i]);
+    // }
     
-    cudaFree(d_result);
-    cudaFree(d_A);
+    // cudaFree(d_result);
+    // cudaFree(d_A);
+}
 }
